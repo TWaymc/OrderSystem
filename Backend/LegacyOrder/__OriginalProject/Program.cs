@@ -26,7 +26,7 @@ namespace LegacyOrderService
             var productRepo = new ProductRepository();
             
             // price is used only to be printed - fix assigned price to the order 
-            double price = productRepo.GetPrice(product);  
+            decimal price = productRepo.GetPrice(product);  
 
 
             Console.WriteLine("Enter quantity:");

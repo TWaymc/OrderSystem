@@ -7,14 +7,14 @@ namespace LegacyOrderService.Data
 {
     public class ProductRepository
     {
-        private readonly Dictionary<string, double> _productPrices = new()
+        private readonly Dictionary<string, decimal> _productPrices = new()
         {
-            ["Widget"] = 12.99,
-            ["Gadget"] = 15.49,
-            ["Doohickey"] = 8.75
+            ["Widget"] = 12.99m,
+            ["Gadget"] = 15.49m,
+            ["Doohickey"] = 8.75m
         };
 
-        public double GetPrice(string productName)
+        public decimal GetPrice(string productName)   // double doesn't make sense for a price 
         {
             // Simulate an expensive lookup
             Thread.Sleep(500);
