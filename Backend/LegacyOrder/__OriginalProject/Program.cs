@@ -15,7 +15,9 @@ namespace LegacyOrderService
             Console.WriteLine("Enter product name:");
             string product = Console.ReadLine();
             var productRepo = new ProductRepository();
-            double price = productRepo.GetPrice(product);
+            
+            // price is used only to be printed - fix assigned price to the order 
+            double price = productRepo.GetPrice(product);  
 
 
             Console.WriteLine("Enter quantity:");
@@ -27,7 +29,7 @@ namespace LegacyOrderService
             order.CustomerName = name;
             order.ProductName = product;
             order.Quantity = qty;
-            order.Price = 10.0;
+            order.Price = price;
 
             double total = order.Quantity * order.Price;
 
