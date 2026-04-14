@@ -1,13 +1,22 @@
 using System;
 using LegacyOrderService.Models;
 using LegacyOrderService.Data;
+using System.Globalization;
+
+
 
 namespace LegacyOrderService
 {
+    
+    
     class Program
     {
         static void Main(string[] args)
         {
+            // Without this config, for some european culture the Price will be converted as 99,99 instead of 99.99 (example)  and this will brake the SQL query
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
+            
             Console.WriteLine("Welcome to Order Processor!");
             Console.WriteLine("Enter customer name:");
             string name = Console.ReadLine();
@@ -29,7 +38,7 @@ namespace LegacyOrderService
             order.CustomerName = name;
             order.ProductName = product;
             order.Quantity = qty;
-            order.Price = price;    //  here the field indicate price but is not clear if the price is unitPrice or the Total.
+            order.Price = price;    //  here the field indicate price but is not clear if the price is unitPrice or the Total. It would be better add the Total as an other filed 
 
             double total = order.Quantity * order.Price;  // total is calculated but never used 
 
