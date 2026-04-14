@@ -7,7 +7,8 @@ namespace LegacyOrderService.Data
 {
     public class ProductRepository
     {
-        private readonly Dictionary<string, decimal> _productPrices = new()
+        
+        private readonly Dictionary<string, decimal> _productPrices = new(StringComparer.OrdinalIgnoreCase)  // this make the product retrieve at least not key sensitive 
         {
             ["Widget"] = 12.99m,
             ["Gadget"] = 15.49m,
@@ -19,6 +20,7 @@ namespace LegacyOrderService.Data
             // Simulate an expensive lookup
             Thread.Sleep(500);
 
+            
             if (_productPrices.TryGetValue(productName, out var price))
                 return price;
 
