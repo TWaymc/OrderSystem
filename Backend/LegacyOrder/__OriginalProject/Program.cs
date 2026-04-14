@@ -29,15 +29,15 @@ namespace LegacyOrderService
             order.CustomerName = name;
             order.ProductName = product;
             order.Quantity = qty;
-            order.Price = price;
+            order.Price = price;    //  here the field indicate price but is not clear if the price is unitPrice or the Total.
 
-            double total = order.Quantity * order.Price;
+            double total = order.Quantity * order.Price;  // total is calculated but never used 
 
             Console.WriteLine("Order complete!");
             Console.WriteLine("Customer: " + order.CustomerName);
             Console.WriteLine("Product: " + order.ProductName);
             Console.WriteLine("Quantity: " + order.Quantity);
-            Console.WriteLine("Total: $" + price);
+            Console.WriteLine("Total: $" + total);   //   now total is correct on screen but not saved. 
 
             Console.WriteLine("Saving order to database...");
             var repo = new OrderRepository();
