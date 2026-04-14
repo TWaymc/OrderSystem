@@ -5,6 +5,6 @@ namespace LegacyOrderService.Models
         public string CustomerName;
         public string ProductName;
         public int Quantity;
-        public double Price;
+        public decimal Price;
     }
 }
