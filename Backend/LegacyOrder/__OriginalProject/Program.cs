@@ -40,7 +40,7 @@ namespace LegacyOrderService
             order.Quantity = qty;
             order.Price = price;    //  here the field indicate price but is not clear if the price is unitPrice or the Total. It would be better add the Total as an other filed 
 
-            double total = order.Quantity * order.Price;  // total is calculated but never used 
+            var total = order.Quantity * order.Price;  // total is calculated but never used 
 
             Console.WriteLine("Order complete!");
             Console.WriteLine("Customer: " + order.CustomerName);
