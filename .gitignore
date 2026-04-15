@@ -4,3 +4,5 @@ Backend/LegacyOrder/__OriginalProject/bin
 Backend/LegacyOrder/Shared/MessagingLib/obj
 Backend/LegacyOrder/Shared/RedisCache/bin
 Backend/LegacyOrder/Shared/RedisCache/obj
+Backend/LegacyOrder/API-Gateway/bin
+Backend/LegacyOrder/API-Gateway/obj
