@@ -1,0 +1,73 @@
+﻿using System.Text;
+using System.Text.Json;
+using LoggingLib.Events;
+using Microsoft.Extensions.Configuration;
+using Products.Infrastructure.Messaging.Publisher.Interface;
+using RabbitMQ.Client;
+
+namespace Products.Infrastructure.Messaging.Publisher;
+
+public class ProductPublisher : IProductPublisher, IDisposable
+{
+    private const string DefaultExchangeName = "product-updated-exchange";
+    private readonly IConnection _connection;
+    private readonly IModel _channel;
+    private readonly string _exchangeName;
+
+    public ProductPublisher(IConfiguration configuration)
+    {
+        var hostName = configuration["RabbitMq:HostName"] ?? "localhost";
+        var port = int.TryParse(configuration["RabbitMq:Port"], out var parsedPort) ? parsedPort : 5672;
+        var userName = configuration["RabbitMq:UserName"];
+        var password = configuration["RabbitMq:Password"];
+
+        _exchangeName = configuration["RabbitMq:ProductUpdatedExchangeName"]
+                        ?? configuration["RabbitMq:ExchangeName"]
+                        ?? DefaultExchangeName;
+        var exchangeType = configuration["RabbitMq:ExchangeType"] ?? ExchangeType.Fanout;
+        var exchangeDurable = bool.TryParse(configuration["RabbitMq:ExchangeDurable"], out var exchangeDurableValue) && exchangeDurableValue;
+
+        var factory = new ConnectionFactory
+        {
+            HostName = hostName,
+            Port = port
+        };
+
+        if (!string.IsNullOrWhiteSpace(userName))
+            factory.UserName = userName;
+        if (!string.IsNullOrWhiteSpace(password))
+            factory.Password = password;
+
+        _connection = factory.CreateConnection();
+        _channel = _connection.CreateModel();
+
+        _channel.ExchangeDeclare(_exchangeName, exchangeType, durable: exchangeDurable, autoDelete: false);
+    }
+    
+    public async Task PublishAsync(Guid productId)
+    {
+        await PublishAsync(new ProductUpdatedEvent()
+        {
+            ProductId = productId
+        });
+    }
+    
+    private Task PublishAsync(ProductUpdatedEvent productEvent)
+    {
+        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(productEvent));
+
+        _channel.BasicPublish(
+            exchange: _exchangeName,
+            routingKey: string.Empty,
+            basicProperties: null,
+            body: body);
+
+        return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        _channel?.Dispose();
+        _connection?.Dispose();
+    }
+}
