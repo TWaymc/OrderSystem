@@ -1,0 +1,23 @@
+Entity Framework Core commands (run from Orders.API folder)
+============================================================
+
+Prerequisite (one-time, if needed):
+dotnet tool install --global dotnet-ef
+
+Add migration:
+dotnet ef migrations add <MigrationName> --project "..\Orders.Infrastructure\Orders.Infrastructure.csproj" --startup-project "Orders.API.csproj" --context AppDbContext --output-dir "Migrations"
+
+Update database to latest migration:
+dotnet ef database update --project "..\Orders.Infrastructure\Orders.Infrastructure.csproj" --startup-project "Orders.API.csproj" --context AppDbContext
+
+Update database to a specific migration:
+dotnet ef database update <MigrationName> --project "..\Orders.Infrastructure\Orders.Infrastructure.csproj" --startup-project "Orders.API.csproj" --context AppDbContext
+
+Revert/remove LAST migration (before it is applied in shared env):
+dotnet ef migrations remove --project "..\Orders.Infrastructure\Orders.Infrastructure.csproj" --startup-project "Orders.API.csproj" --context AppDbContext
+
+Generate SQL script (all migrations):
+dotnet ef migrations script --project "..\Orders.Infrastructure\Orders.Infrastructure.csproj" --startup-project "Orders.API.csproj" --context AppDbContext --output "..\Orders.Infrastructure\Migrations\migration.sql"
+
+Generate idempotent SQL script (safe for multiple environments):
+dotnet ef migrations script --idempotent --project "..\Orders.Infrastructure\Orders.Infrastructure.csproj" --startup-project "Orders.API.csproj" --context AppDbContext --output "..\Orders.Infrastructure\Migrations\migration-idempotent.sql"

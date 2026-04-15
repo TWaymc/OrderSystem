@@ -1,4 +1,4 @@
-namespace Contacts.Domain.Entities;
+namespace Orders.Domain.Entities;
 
 /// <summary>
 /// Base type for persistence: audit fields and soft delete.

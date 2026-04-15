@@ -1,4 +1,4 @@
-namespace Contacts.Domain.Entities;
+namespace Orders.Domain.Entities;
 
 /// <summary>
 /// Stores the last issued number per logical sequence (e.g. Type = "Property" for product codes).
