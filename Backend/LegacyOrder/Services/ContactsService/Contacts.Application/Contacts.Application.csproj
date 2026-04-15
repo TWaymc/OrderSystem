@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Shared\MessagingLib\MessagingLib.csproj" />
+      <ProjectReference Include="..\..\..\Shared\RedisCache\RedisCache.csproj" />
+      <ProjectReference Include="..\Contacts.Domain\Contacts.Domain.csproj" />
+      <ProjectReference Include="..\Contacts.Infrastructure\Contacts.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="16.1.1" />
+    </ItemGroup>
+
+</Project>

@@ -11,10 +11,10 @@
       }
     },
     {
-      "UpstreamPathTemplate": "/api/customers/{everything}",
-      "DownstreamPathTemplate": "/api/customers/{everything}",
+      "UpstreamPathTemplate": "/api/contacts/{everything}",
+      "DownstreamPathTemplate": "/api/contacts/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
-      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5003 }],
+      "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5004 }],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []

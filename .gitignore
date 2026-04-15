@@ -35,3 +35,16 @@ Backend/LegacyOrder/Shared/MessagingLib/bin
 Backend/LegacyOrder/Services/LogService/Log.Domain/bin
 Backend/LegacyOrder/Services/LogService/Log.Worker/logs
 Backend/LegacyOrder/Shared/MessagingLib/bin
+Backend/LegacyOrder/Services/ContactsService/Contacts.API/bin
+Backend/LegacyOrder/Services/ContactsService/Contacts.API/obj
+Backend/LegacyOrder/Services/ContactsService/Contacts.Application/bin
+Backend/LegacyOrder/Services/ContactsService/Contacts.Application/obj
+Backend/LegacyOrder/Services/ContactsService/Contacts.Domain/obj
+Backend/LegacyOrder/Services/ContactsService/Contacts.Infrastructure/bin
+Backend/LegacyOrder/Services/OrdersService/Orders.API/obj
+Backend/LegacyOrder/Services/OrdersService/Orders.Application/obj
+Backend/LegacyOrder/Services/OrdersService/Orders.Domain/obj
+Backend/LegacyOrder/Services/OrdersService/Orders.Infrastructure/obj
+Backend/LegacyOrder/Services/OrdersService/Orders.Worker/obj
+Backend/LegacyOrder/Services/ContactsService/Contacts.Infrastructure/obj
+Backend/LegacyOrder/Services/ContactsService/Contacts.Infrastructure/obj

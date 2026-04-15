@@ -1,0 +1,23 @@
+Entity Framework Core commands (run from Contacts.API folder)
+==============================================================
+
+Prerequisite (one-time, if needed):
+dotnet tool install --global dotnet-ef
+
+Add migration:
+dotnet ef migrations add <MigrationName> --project "..\Contacts.Infrastructure\Contacts.Infrastructure.csproj" --startup-project "Contacts.API.csproj" --context AppDbContext --output-dir "Migrations"
+
+Update database to latest migration:
+dotnet ef database update --project "..\Contacts.Infrastructure\Contacts.Infrastructure.csproj" --startup-project "Contacts.API.csproj" --context AppDbContext
+
+Update database to a specific migration:
+dotnet ef database update <MigrationName> --project "..\Contacts.Infrastructure\Contacts.Infrastructure.csproj" --startup-project "Contacts.API.csproj" --context AppDbContext
+
+Revert/remove LAST migration (before it is applied in shared env):
+dotnet ef migrations remove --project "..\Contacts.Infrastructure\Contacts.Infrastructure.csproj" --startup-project "Contacts.API.csproj" --context AppDbContext
+
+Generate SQL script (all migrations):
+dotnet ef migrations script --project "..\Contacts.Infrastructure\Contacts.Infrastructure.csproj" --startup-project "Contacts.API.csproj" --context AppDbContext --output "..\Contacts.Infrastructure\Migrations\migration.sql"
+
+Generate idempotent SQL script (safe for multiple environments):
+dotnet ef migrations script --idempotent --project "..\Contacts.Infrastructure\Contacts.Infrastructure.csproj" --startup-project "Contacts.API.csproj" --context AppDbContext --output "..\Contacts.Infrastructure\Migrations\migration-idempotent.sql"
