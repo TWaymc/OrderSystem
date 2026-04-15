@@ -21,3 +21,12 @@ Backend/LegacyOrder/Services/LogService/Log.Infrastructure/bin
 Backend/LegacyOrder/Services/LogService/Log.Infrastructure/obj
 Backend/LegacyOrder/Services/LogService/Log.Worker/bin
 Backend/LegacyOrder/Services/LogService/Log.Worker/obj
+Backend/LegacyOrder/Services/ProductsService/Products.API/bin
+Backend/LegacyOrder/Services/ProductsService/Products.API/obj
+Backend/LegacyOrder/Services/ProductsService/Products.Application/bin
+Backend/LegacyOrder/Services/ProductsService/Products.Domain/bin
+Backend/LegacyOrder/Services/ProductsService/Products.Infrastructure/bin
+Backend/LegacyOrder/Services/ProductsService/Products.Application/obj
+Backend/LegacyOrder/Services/LogService/Log.Worker/logs
+Backend/LegacyOrder/Services/ProductsService/Products.Domain/obj
+Backend/LegacyOrder/Services/ProductsService/Products.Infrastructure/obj
