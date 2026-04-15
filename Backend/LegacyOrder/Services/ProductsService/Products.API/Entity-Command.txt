@@ -1,0 +1,24 @@
+Entity Framework Core commands (run from Products.API folder)
+==============================================================
+
+Prerequisite (one-time, if needed):
+dotnet tool install --global dotnet-ef
+
+Add migration:
+dotnet ef migrations add <MigrationName> --project "..\..\Products.Infrastructure\Products.Infrastructure\Products.Infrastructure.csproj" --startup-project "Products.API.csproj" --context AppDbContext --output-dir "Migrations"
+
+Update database to latest migration:
+dotnet ef database update --project "..\..\Products.Infrastructure\Products.Infrastructure\Products.Infrastructure.csproj" --startup-project "Products.API.csproj" --context AppDbContext
+
+Update database to a specific migration:
+dotnet ef database update <MigrationName> --project "..\..\Products.Infrastructure\Products.Infrastructure\Products.Infrastructure.csproj" --startup-project "Products.API.csproj" --context AppDbContext
+
+Revert/remove LAST migration (before it is applied in shared env):
+dotnet ef migrations remove --project "..\..\Products.Infrastructure\Products.Infrastructure\Products.Infrastructure.csproj" --startup-project "Products.API.csproj" --context AppDbContext
+
+Generate SQL script (all migrations):
+dotnet ef migrations script --project "..\..\Products.Infrastructure\Products.Infrastructure\Products.Infrastructure.csproj" --startup-project "Products.API.csproj" --context AppDbContext --output "..\..\Products.Infrastructure\Products.Infrastructure\Migrations\migration.sql"
+
+Generate idempotent SQL script (safe for multiple environments):
+dotnet ef migrations script --idempotent --project "..\..\Products.Infrastructure\Products.Infrastructure\Products.Infrastructure.csproj" --startup-project "Products.API.csproj" --context AppDbContext --output "..\..\Products.Infrastructure\Products.Infrastructure\Migrations\migration-idempotent.sql"
+

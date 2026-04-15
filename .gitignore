@@ -30,3 +30,8 @@ Backend/LegacyOrder/Services/ProductsService/Products.Application/obj
 Backend/LegacyOrder/Services/LogService/Log.Worker/logs
 Backend/LegacyOrder/Services/ProductsService/Products.Domain/obj
 Backend/LegacyOrder/Services/ProductsService/Products.Infrastructure/obj
+Backend/LegacyOrder/Shared/MessagingLib/bin
+Backend/LegacyOrder/Shared/MessagingLib/bin
+Backend/LegacyOrder/Services/LogService/Log.Domain/bin
+Backend/LegacyOrder/Services/LogService/Log.Worker/logs
+Backend/LegacyOrder/Shared/MessagingLib/bin
