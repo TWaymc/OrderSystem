@@ -1,0 +1,3 @@
+2026-04-15 09:34:31.227 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-15 09:34:31.267 +02:00 [INF] Hosting environment: Development
+2026-04-15 09:34:31.268 +02:00 [INF] Content root path: C:\Users\twaym\software\OrderMicroService\OrderSystem\Backend\LegacyOrder\Services\LogService\Log.Worker

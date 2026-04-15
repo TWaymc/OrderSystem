@@ -14,3 +14,10 @@ Backend/LegacyOrder/Services/AuthService/Auth.Infrastructure/bin
 Backend/LegacyOrder/Services/AuthService/Auth.Application/obj
 Backend/LegacyOrder/Services/AuthService/Auth.Domain/obj
 Backend/LegacyOrder/Services/AuthService/Auth.Infrastructure/obj
+Backend/LegacyOrder/Services/LogService/Log.Application/bin
+Backend/LegacyOrder/Services/LogService/Log.Application/obj
+Backend/LegacyOrder/Services/LogService/Log.Domain/obj
+Backend/LegacyOrder/Services/LogService/Log.Infrastructure/bin
+Backend/LegacyOrder/Services/LogService/Log.Infrastructure/obj
+Backend/LegacyOrder/Services/LogService/Log.Worker/bin
+Backend/LegacyOrder/Services/LogService/Log.Worker/obj
