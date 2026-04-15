@@ -1,0 +1,24 @@
+Entity Framework Core commands (run from Auth.API folder)
+==========================================================
+
+Prerequisite (one-time, if needed):
+dotnet tool install --global dotnet-ef
+
+Add migration (writes to Auth.Infrastructure\Migrations):
+dotnet ef migrations add <MigrationName> --project "..\..\Auth.Infrastructure\Auth.Infrastructure\Auth.Infrastructure.csproj" --startup-project "Auth.API.csproj" --context AuthDbContext --output-dir "Migrations"
+
+Update database to latest migration:
+dotnet ef database update --project "..\..\Auth.Infrastructure\Auth.Infrastructure\Auth.Infrastructure.csproj" --startup-project "Auth.API.csproj" --context AuthDbContext
+
+Update database to a specific migration:
+dotnet ef database update <MigrationName> --project "..\..\Auth.Infrastructure\Auth.Infrastructure\Auth.Infrastructure.csproj" --startup-project "Auth.API.csproj" --context AuthDbContext
+
+Revert/remove LAST migration (before it is applied in shared env):
+dotnet ef migrations remove --project "..\..\Auth.Infrastructure\Auth.Infrastructure\Auth.Infrastructure.csproj" --startup-project "Auth.API.csproj" --context AuthDbContext
+
+Generate SQL script (all migrations):
+dotnet ef migrations script --project "..\..\Auth.Infrastructure\Auth.Infrastructure\Auth.Infrastructure.csproj" --startup-project "Auth.API.csproj" --context AuthDbContext --output "..\..\Auth.Infrastructure\Auth.Infrastructure\Migrations\migration.sql"
+
+Generate idempotent SQL script (safe for multiple environments):
+dotnet ef migrations script --idempotent --project "..\..\Auth.Infrastructure\Auth.Infrastructure\Auth.Infrastructure.csproj" --startup-project "Auth.API.csproj" --context AuthDbContext --output "..\..\Auth.Infrastructure\Auth.Infrastructure\Migrations\migration-idempotent.sql"
+

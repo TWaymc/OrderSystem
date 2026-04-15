@@ -6,3 +6,11 @@ Backend/LegacyOrder/Shared/RedisCache/bin
 Backend/LegacyOrder/Shared/RedisCache/obj
 Backend/LegacyOrder/API-Gateway/bin
 Backend/LegacyOrder/API-Gateway/obj
+Backend/LegacyOrder/Services/AuthService/Auth.API/bin
+Backend/LegacyOrder/Services/AuthService/Auth.API/obj
+Backend/LegacyOrder/Services/AuthService/Auth.Application/bin
+Backend/LegacyOrder/Services/AuthService/Auth.Domain/bin
+Backend/LegacyOrder/Services/AuthService/Auth.Infrastructure/bin
+Backend/LegacyOrder/Services/AuthService/Auth.Application/obj
+Backend/LegacyOrder/Services/AuthService/Auth.Domain/obj
+Backend/LegacyOrder/Services/AuthService/Auth.Infrastructure/obj
