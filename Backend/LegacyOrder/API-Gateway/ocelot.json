@@ -3,7 +3,7 @@
     {
       "UpstreamPathTemplate": "/api/products/{everything}",
       "DownstreamPathTemplate": "/api/products/{everything}",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
       "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5003 }],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
@@ -13,7 +13,7 @@
     {
       "UpstreamPathTemplate": "/api/contacts/{everything}",
       "DownstreamPathTemplate": "/api/contacts/{everything}",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
       "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5004 }],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
@@ -23,7 +23,7 @@
     {
       "UpstreamPathTemplate": "/api/orders/{everything}",
       "DownstreamPathTemplate": "/api/orders/{everything}",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ],
       "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5005 }],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
@@ -33,13 +33,13 @@
     {
       "UpstreamPathTemplate": "/api/auth/login",
       "DownstreamPathTemplate": "/api/auth/login",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [ "POST", "OPTIONS" ],
       "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5002 }]
     },
     {
       "UpstreamPathTemplate": "/api/auth/register",
       "DownstreamPathTemplate": "/api/auth/register",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [ "POST", "OPTIONS" ],
       "DownstreamHostAndPorts": [{ "Host": "localhost", "Port": 5002 }],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",

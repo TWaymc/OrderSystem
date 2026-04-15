@@ -59,7 +59,7 @@ public class AuthService : IAuthService
 
         var token = GenerateJwt(user);
 
-        return new AuthResponse { Token = token };
+        return new AuthResponse { Token = token, Name =  user.Name,  Surame =  user.Surname };
     }
 
     private string GenerateJwt(User user)
