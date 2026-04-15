@@ -48,3 +48,8 @@ Backend/LegacyOrder/Services/OrdersService/Orders.Infrastructure/obj
 Backend/LegacyOrder/Services/OrdersService/Orders.Worker/obj
 Backend/LegacyOrder/Services/ContactsService/Contacts.Infrastructure/obj
 Backend/LegacyOrder/Services/ContactsService/Contacts.Infrastructure/obj
+Backend/LegacyOrder/Services/OrdersService/Orders.Infrastructure/bin
+Backend/LegacyOrder/Services/OrdersService/Orders.API/bin
+Backend/LegacyOrder/Services/OrdersService/Orders.Application/bin
+Backend/LegacyOrder/Services/OrdersService/Orders.Domain/bin
+Backend/LegacyOrder/Services/OrdersService/Orders.Worker/bin
