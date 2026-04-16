@@ -1,0 +1,199 @@
+<main class="order-details-page">
+  <section class="col-4 panel">
+    <button type="button" class="secondary back-button" [routerLink]="['/orders']">
+      Back to Orders
+    </button>
+    <h2>{{ isCreateMode ? 'Create Order' : 'Edit Order' }}</h2>
+
+    <form class="order-form" (ngSubmit)="submitOrderMainDetails()">
+      <label for="customerId">Customer</label>
+      <div class="searchable-select">
+        <input
+          id="customerSearch"
+          name="customerSearch"
+          type="text"
+          placeholder="Search customer..."
+          autocomplete="off"
+          [(ngModel)]="customerSearch"
+          (ngModelChange)="onCustomerSearchChange($event)"
+          (focus)="openCustomerDropdown()"
+          (blur)="closeCustomerDropdownSoon()"
+        />
+        @if (customerDropdownOpen()) {
+          <div class="dropdown-panel">
+            @if (filteredContacts().length === 0) {
+              <div class="dropdown-empty">No customer found.</div>
+            } @else {
+              @for (contact of filteredContacts(); track contact.id) {
+                <button
+                  type="button"
+                  class="dropdown-option"
+                  (mousedown)="selectCustomer(contact)"
+                >
+                  {{ contact.code }} - {{ contact.name }} {{ contact.surname }}
+                </button>
+              }
+            }
+          </div>
+        }
+      </div>
+
+      <button type="submit" [disabled]="isSaving() || isLoading()">
+        {{ isSaving() ? 'Saving...' : (isCreateMode ? 'Create Order' : 'Save Details') }}
+      </button>
+    </form>
+
+    @if (errorMessage()) {
+      <p class="message error">{{ errorMessage() }}</p>
+    }
+    @if (successMessage()) {
+      <p class="message success">{{ successMessage() }}</p>
+    }
+
+    @if (!isCreateMode && order(); as currentOrder) {
+      <div class="readonly-block">
+        <h3>Order Info</h3>
+
+        <div class="readonly-grid">
+          <div>
+            <span class="readonly-label">Code</span>
+            <span class="readonly-value">{{ currentOrder.code }}</span>
+          </div>
+          <div>
+            <span class="readonly-label">Status</span>
+            <span class="readonly-value">{{ getStatusLabel(currentOrder.statusCode) }}</span>
+          </div>
+          <div>
+            <span class="readonly-label">Customer Name</span>
+            <span class="readonly-value"
+              >{{ currentOrder.customerName }} {{ currentOrder.customerSurname }}</span
+            >
+          </div>
+          <div>
+            <span class="readonly-label">Created At</span>
+            <span class="readonly-value">{{ currentOrder.createdAt | date: 'dd/MM/yyyy' }}</span>
+          </div>
+          <div>
+            <span class="readonly-label">Created By</span>
+            <span class="readonly-value">{{ currentOrder.createdBy }}</span>
+          </div>
+          <div>
+            <span class="readonly-label">Modified At</span>
+            <span class="readonly-value">
+              {{ currentOrder.modifiedAt ? (currentOrder.modifiedAt | date: 'dd/MM/yyyy') : '-' }}
+            </span>
+          </div>
+          <div>
+            <span class="readonly-label">Last Modified By</span>
+            <span class="readonly-value">{{ currentOrder.lastModifiedBy }}</span>
+          </div>
+        </div>
+      </div>
+    }
+  </section>
+
+  <section class="col-8 panel">
+    <h3>Add Product Item</h3>
+
+    <form class="item-form" (ngSubmit)="addItem()">
+      <div class="item-fields">
+        <div>
+          <label for="productId">Product</label>
+          <div class="searchable-select">
+            <input
+              id="productSearch"
+              name="productSearch"
+              type="text"
+              placeholder="Search product..."
+              autocomplete="off"
+              [(ngModel)]="productSearch"
+              (ngModelChange)="onProductSearchChange($event)"
+              (focus)="openProductDropdown()"
+              (blur)="closeProductDropdownSoon()"
+            />
+            @if (productDropdownOpen()) {
+              <div class="dropdown-panel">
+                @if (filteredProducts().length === 0) {
+                  <div class="dropdown-empty">No product found.</div>
+                } @else {
+                  @for (product of filteredProducts(); track product.id) {
+                    <button
+                      type="button"
+                      class="dropdown-option"
+                      (mousedown)="selectProduct(product)"
+                    >
+                      {{ product.code }} - {{ product.name }} ({{ product.price }})
+                    </button>
+                  }
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div>
+          <label for="quantity">Quantity</label>
+          <input
+            id="quantity"
+            name="quantity"
+            type="number"
+            min="1"
+            [(ngModel)]="itemQuantity"
+            required
+          />
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="isAddingItem()">
+        {{ isAddingItem() ? 'Adding...' : 'Add Item' }}
+      </button>
+    </form>
+
+    <div class="items-table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Unit Price</th>
+            <th>Qty</th>
+            <th>SubTotal</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (orderItems().length === 0) {
+            <tr>
+              <td colspan="6">No items yet.</td>
+            </tr>
+          } @else {
+            @for (item of orderItems(); track item.id) {
+              <tr>
+                <td>{{ item.productCode }}</td>
+                <td>{{ item.productName }}</td>
+                <td>{{ item.productUnitPrice }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.productUnitPrice * item.quantity }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="danger"
+                    (click)="removeItem(item.id)"
+                    [disabled]="isRemovingItem(item.id)"
+                  >
+                    {{ isRemovingItem(item.id) ? 'Removing...' : 'Remove Item' }}
+                  </button>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="totals">
+      <span>Total Items: {{ totalItems() }}</span>
+      <span>Total Amount: {{ totalAmount() }}</span>
+    </div>
+  </section>
+</main>

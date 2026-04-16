@@ -1,0 +1,13 @@
+<mat-toolbar class="main-menu">
+  <span class="brand">Legacy Orders</span>
+
+  <span class="spacer"></span>
+
+  <a mat-button routerLink="/orders" routerLinkActive="active-link">Orders</a>
+  <a mat-button routerLink="/contacts" routerLinkActive="active-link">Contacts</a>
+  <a mat-button routerLink="/products" routerLinkActive="active-link">Products</a>
+  
+  @if (isLoggedIn()) {
+    <button mat-button type="button" (click)="logout()">Logout</button>
+  }
+</mat-toolbar>

@@ -1,0 +1,101 @@
+<main class="contacts-page">
+  <section class="col-4 panel">
+    <h2>{{ isEditMode ? 'Edit Contact' : 'Create Contact' }}</h2>
+
+    <form class="contact-form" (ngSubmit)="save()">
+      <label for="name">Name</label>
+      <input id="name" name="name" [(ngModel)]="name" placeholder="John" required />
+
+      <label for="surname">Surname</label>
+      <input
+        id="surname"
+        name="surname"
+        [(ngModel)]="surname"
+        placeholder="Doe"
+        required
+      />
+
+      <label for="mobileNumber">Mobile Number</label>
+      <input
+        id="mobileNumber"
+        name="mobileNumber"
+        [(ngModel)]="mobileNumber"
+        placeholder="+1 555 123 4567"
+      />
+
+      <label for="email">Email</label>
+      <input
+        id="email"
+        name="email"
+        [(ngModel)]="email"
+        placeholder="john.doe@email.com"
+        type="email"
+      />
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="isSubmitting() || isDeleting()">
+          {{
+            isSubmitting()
+              ? (isEditMode ? 'Updating...' : 'Creating...')
+              : (isEditMode ? 'Update Contact' : 'Create Contact')
+          }}
+        </button>
+
+        @if (isEditMode) {
+          <button type="button" class="danger" (click)="deleteSelected()" [disabled]="isDeleting()">
+            {{ isDeleting() ? 'Deleting...' : 'Delete Contact' }}
+          </button>
+          <button type="button" class="secondary" (click)="clearSelection()">Cancel Edit</button>
+        }
+      </div>
+    </form>
+
+    @if (errorMessage()) {
+      <p class="error-message">{{ errorMessage() }}</p>
+    }
+  </section>
+
+  <section class="col-8 panel">
+    <div class="table-header">
+      <h2>Contacts</h2>
+      <button type="button" class="secondary" (click)="loadContacts()" [disabled]="isLoading()">
+        Refresh
+      </button>
+    </div>
+
+    @if (isLoading()) {
+      <p>Loading contacts...</p>
+    } @else if (contacts().length === 0) {
+      <p>No contacts found.</p>
+    } @else {
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Surname</th>
+              <th>Mobile</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (contact of contacts(); track contact.id) {
+              <tr
+                (click)="selectContact(contact)"
+                [class.selected]="selectedContactId() === contact.id"
+              >
+                <td>{{ contact.code }}</td>
+                <td>{{ contact.name }}</td>
+                <td>{{ contact.surname }}</td>
+                <td>{{ contact.mobileNumber || '-' }}</td>
+                <td>{{ contact.email || '-' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+</main>
+

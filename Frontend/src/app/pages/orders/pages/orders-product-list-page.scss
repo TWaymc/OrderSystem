@@ -1,0 +1,168 @@
+.page {
+  border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 40%, white);
+  border-radius: 12px;
+  background: var(--mat-sys-surface);
+  padding: 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.45rem;
+}
+
+h2 {
+  margin: 0;
+}
+
+.subtitle {
+  margin: 0.4rem 0 0;
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 80%, black);
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.actions {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.status-menu-container {
+  position: relative;
+}
+
+.status-menu {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  display: grid;
+  gap: 0.35rem;
+  min-width: 130px;
+  padding: 0.45rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 35%, white);
+  background: var(--mat-sys-surface);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  z-index: 5;
+}
+
+.status-option {
+  width: 100%;
+  padding: 0.4rem 0.55rem;
+  border-radius: 6px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.status-option.pending {
+  background: #fff4cc;
+  color: #8a6700;
+}
+
+.status-option.cancelled {
+  background: #fde2e1;
+  color: #b42318;
+}
+
+.status-option.processed {
+  background: #dcfae6;
+  color: #067647;
+}
+
+button.secondary {
+  background: color-mix(in srgb, var(--mat-sys-primary) 14%, white);
+  color: var(--mat-sys-primary);
+}
+
+button.danger {
+  background: #b42318;
+  color: #fff;
+}
+
+.table-wrapper {
+  height: 70vh;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.65rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--mat-sys-outline) 25%, white);
+}
+
+th {
+  position: sticky;
+  top: 0;
+  background: var(--mat-sys-surface);
+  z-index: 1;
+}
+
+.sort-button {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-weight: 700;
+}
+
+.error {
+  color: #b42318;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.status-pending {
+  background: #fff4cc;
+  color: #8a6700;
+}
+
+.status-cancelled {
+  background: #fde2e1;
+  color: #b42318;
+}
+
+.status-processed {
+  background: #dcfae6;
+  color: #067647;
+}
+
+.status-default {
+  background: #eceff3;
+  color: #344054;
+}

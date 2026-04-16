@@ -1,0 +1,133 @@
+<section class="page">
+  <div class="header">
+    <div>
+      <h2>Orders</h2>
+      <p class="subtitle">All orders from the API query.</p>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="secondary" [routerLink]="['/orders', 'new']">Add Order</button>
+      <button type="button" (click)="loadOrders()" [disabled]="isLoading()">Refresh</button>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <p>Loading orders...</p>
+  } @else if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  } @else if (orders().length === 0) {
+    <p>No orders found.</p>
+  } @else {
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>
+              <button type="button" class="sort-button" (click)="toggleSort('code')">
+                Code {{ getSortIndicator('code') }}
+              </button>
+            </th>
+            <th>
+              <button type="button" class="sort-button" (click)="toggleSort('statusCode')">
+                Status {{ getSortIndicator('statusCode') }}
+              </button>
+            </th>
+            <th>
+              <button type="button" class="sort-button" (click)="toggleSort('customer')">
+                Customer {{ getSortIndicator('customer') }}
+              </button>
+            </th>
+            <th>
+              <button type="button" class="sort-button" (click)="toggleSort('totalItems')">
+                Total Items {{ getSortIndicator('totalItems') }}
+              </button>
+            </th>
+            <th>
+              <button type="button" class="sort-button" (click)="toggleSort('totalAmount')">
+                Total Amount {{ getSortIndicator('totalAmount') }}
+              </button>
+            </th>
+            <th>
+              <button type="button" class="sort-button" (click)="toggleSort('createdAt')">
+                Created At {{ getSortIndicator('createdAt') }}
+              </button>
+            </th>
+            <th>
+              <button type="button" class="sort-button" (click)="toggleSort('modifiedAt')">
+                Modified At {{ getSortIndicator('modifiedAt') }}
+              </button>
+            </th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of sortedOrders(); track order.id) {
+            <tr>
+              <td>{{ order.code }}</td>
+              <td>
+                <span [class]="'status-badge ' + getStatusClass(order.statusCode)">
+                  {{ getStatusLabel(order.statusCode) }}
+                </span>
+              </td>
+              <td>{{ order.customerName }} {{ order.customerSurname }}</td>
+              <td>{{ order.totalItems }}</td>
+              <td>{{ order.totalAmount }}</td>
+              <td>{{ order.createdAt | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ order.modifiedAt ? (order.modifiedAt | date: 'dd/MM/yyyy') : '-' }}</td>
+              <td>
+                <div class="actions">
+                  <div class="status-menu-container">
+                    <button
+                      type="button"
+                      class="secondary"
+                      (click)="toggleStatusMenu(order.id)"
+                      [disabled]="isUpdatingStatus(order.id)"
+                    >
+                      {{ isUpdatingStatus(order.id) ? 'Changing...' : 'Change Status' }}
+                    </button>
+
+                    @if (isStatusMenuOpen(order.id)) {
+                      <div class="status-menu">
+                        <button
+                          type="button"
+                          class="status-option pending"
+                          (click)="changeStatus(order, 0)"
+                        >
+                          Pending
+                        </button>
+                        <button
+                          type="button"
+                          class="status-option cancelled"
+                          (click)="changeStatus(order, 1)"
+                        >
+                          Cancelled
+                        </button>
+                        <button
+                          type="button"
+                          class="status-option processed"
+                          (click)="changeStatus(order, 2)"
+                        >
+                          Processed
+                        </button>
+                      </div>
+                    }
+                  </div>
+                  <button type="button" class="secondary" [routerLink]="['/orders', order.id]">
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    class="danger"
+                    (click)="deleteOrder(order.id)"
+                    [disabled]="isDeleting(order.id)"
+                  >
+                    {{ isDeleting(order.id) ? 'Deleting...' : 'Delete' }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

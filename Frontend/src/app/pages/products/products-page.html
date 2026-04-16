@@ -1,0 +1,95 @@
+<main class="products-page">
+  <section class="col-4 panel">
+    <h2>{{ isEditMode ? 'Edit Product' : 'Create Product' }}</h2>
+
+    <form class="product-form" (ngSubmit)="save()">
+      <label for="name">Name</label>
+      <input id="name" name="name" [(ngModel)]="name" placeholder="Product name" required />
+
+      <label for="price">Price</label>
+      <input
+        id="price"
+        name="price"
+        type="number"
+        min="0"
+        step="0.01"
+        [(ngModel)]="price"
+        placeholder="99.99"
+        required
+      />
+
+      <label for="description">Description</label>
+      <textarea
+        id="description"
+        name="description"
+        [(ngModel)]="description"
+        rows="4"
+        placeholder="Product description"
+        required
+      ></textarea>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="isSubmitting() || isDeleting()">
+          {{
+            isSubmitting()
+              ? (isEditMode ? 'Updating...' : 'Creating...')
+              : (isEditMode ? 'Update Product' : 'Create Product')
+          }}
+        </button>
+
+        @if (isEditMode) {
+          <button type="button" class="danger" (click)="deleteSelected()" [disabled]="isDeleting()">
+            {{ isDeleting() ? 'Deleting...' : 'Delete Product' }}
+          </button>
+          <button type="button" class="secondary" (click)="clearSelection()">Cancel Edit</button>
+        }
+      </div>
+    </form>
+
+    @if (errorMessage()) {
+      <p class="error-message">{{ errorMessage() }}</p>
+    }
+  </section>
+
+  <section class="col-8 panel">
+    <div class="table-header">
+      <h2>Products</h2>
+      <button type="button" class="secondary" (click)="loadProducts()" [disabled]="isLoading()">
+        Refresh
+      </button>
+    </div>
+
+    @if (isLoading()) {
+      <p>Loading products...</p>
+    } @else if (products().length === 0) {
+      <p>No products found.</p>
+    } @else {
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (product of products(); track product.id) {
+              <tr
+                (click)="selectProduct(product)"
+                [class.selected]="selectedProductId() === product.id"
+              >
+                <td>{{ product.code }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.description }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+</main>
+
