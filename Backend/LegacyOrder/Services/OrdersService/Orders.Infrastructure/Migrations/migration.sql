@@ -68,3 +68,19 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+ALTER TABLE [Orders] ADD [TotalAmount] decimal(18,2) NOT NULL DEFAULT 0.0;
+GO
+
+ALTER TABLE [Orders] ADD [TotalItems] int NOT NULL DEFAULT 0;
+GO
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20260416060838_AddOrdersTotals', N'8.0.25');
+GO
+
+COMMIT;
+GO
+

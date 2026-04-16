@@ -23,6 +23,8 @@ public record OrderDto(
     string? CustomerMobileNumber,
     string? CustomerEmail,
     IReadOnlyList<OrderItemDto> OrderItems,
+    decimal TotalAmount,
+    int TotalItems,
     string CreatedBy,
     string LastModifiedBy,
     DateTime CreatedAt,

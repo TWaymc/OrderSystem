@@ -1,5 +1,6 @@
 ﻿namespace Orders.Domain.Entities;
 
+// TODO: this should be a table in the database, so far I keep it simple
 public enum OrderStatus
 {
     Pending,
@@ -34,5 +35,6 @@ public class Order : BaseEntity
     
     public List<OrderItem> OrderItems { get; set; } = new();
     
-    
+    public decimal TotalAmount { get; set; }
+    public int TotalItems { get; set; }
 }

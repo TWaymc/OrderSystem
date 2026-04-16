@@ -101,6 +101,7 @@ public class OrderService : IOrderService
             });
         }
 
+        RecalculateTotals(order);
         var created = await _repo.AddAsync(order);
         await _logger.InfoAsync($"New Order: {code} created by: {createdBy}");
 
@@ -123,6 +124,7 @@ public class OrderService : IOrderService
         order.CustomerEmail = contact.Email;
         order.LastModifiedBy = lastModifiedBy;
 
+        RecalculateTotals(order);
         var updated = await _repo.UpdateAsync(order);
         await _cache.RemoveAsync($"orders:order:{id}");
         await _logger.InfoAsync($"Order: {order.Code} updated by: {lastModifiedBy}");
@@ -164,6 +166,7 @@ public class OrderService : IOrderService
 
         order.LastModifiedBy = lastModifiedBy;
 
+        RecalculateTotals(order);
         var updated = await _repo.UpdateAsync(order);
         await _cache.RemoveAsync($"orders:order:{orderId}");
         await _logger.InfoAsync($"Order item added to order: {order.Code} by: {lastModifiedBy}");
@@ -186,6 +189,7 @@ public class OrderService : IOrderService
         item.LastModifiedBy = lastModifiedBy;
         order.LastModifiedBy = lastModifiedBy;
 
+        RecalculateTotals(order);
         await _repo.UpdateAsync(order);
         await _cache.RemoveAsync($"orders:order:{orderId}");
         await _logger.InfoAsync($"Order item removed from order: {order.Code} by: {lastModifiedBy}");
@@ -221,6 +225,13 @@ public class OrderService : IOrderService
         return product;
     }
 
+    private static void RecalculateTotals(Order order)
+    {
+        var activeItems = order.OrderItems.Where(i => !i.IsDeleted).ToList();
+        order.TotalItems = activeItems.Sum(i => i.Quantity);
+        order.TotalAmount = activeItems.Sum(i => i.ProductUnitPrice * i.Quantity);
+    }
+
     public async Task<OrderDto> UpdateStatusAsync(Guid id, UpdateOrderStatusDto dto, string lastModifiedBy)
     {
         var order = await _repo.GetByIdAsync(id);
@@ -230,6 +241,7 @@ public class OrderService : IOrderService
         order.StatusCode = dto.StatusCode;
         order.LastModifiedBy = lastModifiedBy;
 
+        RecalculateTotals(order);
         var updated = await _repo.UpdateAsync(order);
 
         // await _orderPublisher.PublishAsync(id);  Implemented but not consumed by anything in the system so far,  So Commented
