@@ -12,6 +12,7 @@ namespace Orders.Application.Services;
 public class OrderService : IOrderService
 {
     private readonly IOrderRepository _repo;
+    private readonly IOrderItemRepository _orderItemRepository;
     private readonly ISequenceService _sequences;
     private readonly IMapper _mapper;
     private readonly ILogPublisher _logger;
@@ -22,6 +23,7 @@ public class OrderService : IOrderService
 
     public OrderService(
         IOrderRepository repo,
+        IOrderItemRepository orderItemRepository,
         ISequenceService sequences,
         IMapper mapper,
         ILogPublisher logger,
@@ -31,6 +33,7 @@ public class OrderService : IOrderService
         IProductApiClient productApiClient)
     {
         _repo = repo;
+        _orderItemRepository = orderItemRepository;
         _sequences = sequences;
         _mapper = mapper;
         _logger = logger;
@@ -124,7 +127,7 @@ public class OrderService : IOrderService
         order.CustomerEmail = contact.Email;
         order.LastModifiedBy = lastModifiedBy;
 
-        RecalculateTotals(order);
+        // RecalculateTotals(order); here is useless
         var updated = await _repo.UpdateAsync(order);
         await _cache.RemoveAsync($"orders:order:{id}");
         await _logger.InfoAsync($"Order: {order.Code} updated by: {lastModifiedBy}");
@@ -134,26 +137,22 @@ public class OrderService : IOrderService
 
     public async Task<OrderDto> AddOrderItemAsync(Guid orderId, AddOrderItemDto dto, string lastModifiedBy)
     {
-        var order = await _repo.GetByIdAsync(orderId);
-        if (order == null)
-            throw new Exception("Order not found");
-
         var product = await GetProductAsync(dto.ProductId)
                       ?? throw new Exception($"Product '{dto.ProductId}' not found.");
 
-        var existingItem = order.OrderItems.FirstOrDefault(i => i.ProductId == dto.ProductId);
+        var existingItem = await _orderItemRepository.GetByOrderAndProductAsync(orderId, dto.ProductId);
         if (existingItem != null)
         {
             existingItem.Quantity += dto.Quantity;
             existingItem.LastModifiedBy = lastModifiedBy;
-            existingItem.ModifiedAt = DateTime.UtcNow;
+            await _orderItemRepository.UpdateAsync(existingItem);
         }
         else
         {
-            order.OrderItems.Add(new OrderItem
+            await _orderItemRepository.AddAsync(new OrderItem
             {
                 Id = Guid.NewGuid(),
-                OrderId = order.Id,
+                OrderId = orderId,
                 ProductId = dto.ProductId,
                 ProductCode = product.Code,
                 ProductName = product.Name,
@@ -163,6 +162,10 @@ public class OrderService : IOrderService
                 LastModifiedBy = lastModifiedBy
             });
         }
+
+        var order = await _repo.GetByIdAsync(orderId);
+        if (order == null)
+            throw new Exception("Order not found");
 
         order.LastModifiedBy = lastModifiedBy;
 
@@ -241,7 +244,7 @@ public class OrderService : IOrderService
         order.StatusCode = dto.StatusCode;
         order.LastModifiedBy = lastModifiedBy;
 
-        RecalculateTotals(order);
+        // RecalculateTotals(order); here is useless
         var updated = await _repo.UpdateAsync(order);
 
         // await _orderPublisher.PublishAsync(id);  Implemented but not consumed by anything in the system so far,  So Commented

@@ -41,7 +41,7 @@ public class OrderRepository : IOrderRepository
     {
         order.ModifiedAt = DateTime.UtcNow;
 
-        _context.Orders.Update(order);
+        //_context.Orders.Update(order);
         await _context.SaveChangesAsync();
         return order;
     }

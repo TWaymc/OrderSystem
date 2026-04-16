@@ -17,6 +17,7 @@ public static class ServiceCollectionExtensions
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IOrderItemRepository, OrderItemRepository>();
         services.AddScoped<ISequenceRepository, SequenceRepository>();
         services.AddSingleton<IOrderPublisher, OrderPublisher>();
 

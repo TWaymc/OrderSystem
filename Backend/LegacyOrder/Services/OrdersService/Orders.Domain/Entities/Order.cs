@@ -37,4 +37,6 @@ public class Order : BaseEntity
     
     public decimal TotalAmount { get; set; }
     public int TotalItems { get; set; }
+    
+    public byte[] RowVersion { get; set; }
 }
