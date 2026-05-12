@@ -8,5 +8,5 @@ public interface IContactRepository
     Task<IEnumerable<Contact>> GetAllAsync();
     Task<Contact> AddAsync(Contact contact);
     Task<Contact> UpdateAsync(Contact contact, byte[] originalRowVersion);
-    Task<bool> DeleteAsync(Guid id, string lastUpdatedBy);
+    Task<bool> DeleteAsync(Guid id, string lastModifiedBy);
 }

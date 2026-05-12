@@ -8,5 +8,5 @@ public interface IOrderRepository
     Task<IEnumerable<Order>> GetAllAsync();
     Task<Order> AddAsync(Order order);
     Task<Order> UpdateAsync(Order order, byte[]? originalRowVersion = null);
-    Task<bool> DeleteAsync(Guid id, string lastUpdatedBy);
+    Task<bool> DeleteAsync(Guid id, string lastModifiedBy);
 }

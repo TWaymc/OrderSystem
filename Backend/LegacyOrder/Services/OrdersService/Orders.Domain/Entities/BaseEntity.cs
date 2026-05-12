@@ -1,4 +1,4 @@
-namespace Products.Domain.Entities;
+namespace Orders.Domain.Entities;
 
 /// <summary>
 /// Base type for persistence: audit fields and soft delete.
@@ -9,9 +9,9 @@ public abstract class BaseEntity
     public DateTime CreatedAt { get; set; }
 
     public DateTime? ModifiedAt { get; set; }
-    
+
     public string CreatedBy { get; set; } = string.Empty;
-    
+
     public string LastModifiedBy { get; set; } = string.Empty;
     public bool IsDeleted { get; set; }
 }
