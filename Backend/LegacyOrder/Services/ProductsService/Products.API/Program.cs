@@ -2,9 +2,11 @@ using System.Text;
 using LoggingLib.Extensions;
 using LoggingLib.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Products.API.Extensions;
+using Products.Infrastructure.Data;
 using RedisCache.Extensions;
 
 
@@ -77,6 +79,12 @@ builder.Services.AddLoggingMessages(serviceName);
 builder.Services.AddRedisService(builder.Configuration);
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
 
 // -- Add middleware for logging rabbit mq messages 
 app.AddLoggingMessages();

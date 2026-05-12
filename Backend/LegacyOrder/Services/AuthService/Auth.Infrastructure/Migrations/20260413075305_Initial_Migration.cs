@@ -27,6 +27,11 @@ namespace Auth.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Email", "PasswordHash", "Name", "Surname", "Role", "CreatedAt" },
+                values: new object[] { Guid.NewGuid(), "asd@asd.com", "AQAAAAIAAYagAAAAEA8mnuh7WfJifqlX0h8hbxvQZOed6B4syCXqxMF8k8w97XAj+W97pV3Hd/C8FjoAxA==", "Admin", "Admin", "Admin", DateTime.UtcNow });
         }
 
         /// <inheritdoc />

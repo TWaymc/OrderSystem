@@ -3,6 +3,7 @@ using System.Text.Json;
 using LoggingLib.Models;
 using LoggingLib.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 
 namespace LoggingLib.Services;
@@ -18,17 +19,32 @@ public class LogPublisher : ILogPublisher, IDisposable
     private readonly IConnection _connection;
     private readonly IModel _channel;
 
-    public LogPublisher(IHttpContextAccessor httpContextAccessor, string defaultServiceName = "")
+    public LogPublisher(
+        IHttpContextAccessor httpContextAccessor,
+        IConfiguration configuration,
+        string defaultServiceName = "")
     {
         _httpContextAccessor = httpContextAccessor;
-        var factory = new ConnectionFactory()
+
+        var hostName = configuration["RabbitMq:HostName"] ?? "localhost";
+        var port = int.TryParse(configuration["RabbitMq:Port"], out var parsedPort) ? parsedPort : 5672;
+        var userName = configuration["RabbitMq:UserName"];
+        var password = configuration["RabbitMq:Password"];
+
+        var factory = new ConnectionFactory
         {
-            HostName = "localhost"
+            HostName = hostName,
+            Port = port,
+            UserName = string.IsNullOrWhiteSpace(userName) ? ConnectionFactory.DefaultUser : userName,
+            Password = string.IsNullOrWhiteSpace(password) ? ConnectionFactory.DefaultPass : password,
+            DispatchConsumersAsync = true,
+            AutomaticRecoveryEnabled = true,
+            NetworkRecoveryInterval = TimeSpan.FromSeconds(5)
         };
 
         _defaultServiceName = defaultServiceName;
 
-        _connection = factory.CreateConnection();
+        _connection = CreateConnectionWithRetry(factory);
         _channel = _connection.CreateModel();
 
         _channel.ExchangeDeclare(ExchangeName, ExchangeType.Fanout, durable: false, autoDelete: false);
@@ -89,6 +105,29 @@ public class LogPublisher : ILogPublisher, IDisposable
             !string.IsNullOrWhiteSpace(id))
             return id;
         return null;
+    }
+
+    private static IConnection CreateConnectionWithRetry(ConnectionFactory factory)
+    {
+        const int maxAttempts = 20;
+        Exception? lastException = null;
+
+        for (var attempt = 1; attempt <= maxAttempts; attempt++)
+        {
+            try
+            {
+                return factory.CreateConnection();
+            }
+            catch (Exception ex)
+            {
+                lastException = ex;
+                Thread.Sleep(TimeSpan.FromSeconds(3));
+            }
+        }
+
+        throw new InvalidOperationException(
+            "Unable to connect to RabbitMQ after multiple retry attempts.",
+            lastException);
     }
 
     public void Dispose()

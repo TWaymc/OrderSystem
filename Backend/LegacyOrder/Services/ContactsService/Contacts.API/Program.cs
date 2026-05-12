@@ -3,9 +3,11 @@ using Contacts.API.Extensions;
 using LoggingLib.Extensions;
 using LoggingLib.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RedisCache.Extensions;
+using Contacts.Infrastructure.Data;
 
 const string serviceName = "ContactsService";
 
@@ -71,6 +73,12 @@ builder.Services.AddLoggingMessages(serviceName);
 builder.Services.AddRedisService(builder.Configuration);
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
 
 app.AddLoggingMessages();
 

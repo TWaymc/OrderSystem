@@ -18,6 +18,7 @@ public static  class ServiceCollectionExtensions
         services.AddSingleton<ILogPublisher>(provider =>
             new LogPublisher(
                 provider.GetRequiredService<IHttpContextAccessor>(),
+                provider.GetRequiredService<IConfiguration>(),
                 defaultServiceName));
 
         return services;
