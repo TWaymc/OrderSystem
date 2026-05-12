@@ -8,6 +8,7 @@ public class ProductMappingProfile : Profile
 {
     public ProductMappingProfile()
     {
-        CreateMap<Product, ProductDto>();
+        CreateMap<Product, ProductDto>()
+            .ForCtorParam("RowVersion", opt => opt.MapFrom(src => Convert.ToBase64String(src.RowVersion)));
     }
 }

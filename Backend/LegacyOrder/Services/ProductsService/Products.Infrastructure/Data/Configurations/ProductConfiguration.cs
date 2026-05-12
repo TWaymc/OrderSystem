@@ -37,7 +37,7 @@ namespace Products.Infrastructure.Data.Configurations
                 .HasMaxLength(1000);
 
             // To prevent Concurrency Issues
-            builder.Property<byte[]>("RowVersion")
+            builder.Property(p => p.RowVersion)
                 .IsRowVersion();
 
             builder.Property(p => p.CreatedAt)

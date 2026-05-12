@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { finalize } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 
 import {
   Contact,
@@ -17,7 +17,7 @@ import { ContactsService } from '../../_services/contacts.service';
 })
 export class ContactsPage implements OnInit {
   contacts = signal<Contact[]>([]);
-  selectedContactId = signal<string | null>(null);
+  selectedContact = signal<Contact | null>(null);
   isLoading = signal(false);
   isSubmitting = signal(false);
   isDeleting = signal(false);
@@ -52,11 +52,11 @@ export class ContactsPage implements OnInit {
   }
 
   get isEditMode(): boolean {
-    return this.selectedContactId() !== null;
+    return this.selectedContact() !== null;
   }
 
   selectContact(contact: Contact): void {
-    this.selectedContactId.set(contact.id);
+    this.selectedContact.set(contact);
     this.name = contact.name;
     this.surname = contact.surname;
     this.mobileNumber = contact.mobileNumber ?? '';
@@ -65,7 +65,7 @@ export class ContactsPage implements OnInit {
   }
 
   clearSelection(): void {
-    this.selectedContactId.set(null);
+    this.selectedContact.set(null);
     this.name = '';
     this.surname = '';
     this.mobileNumber = '';
@@ -89,17 +89,30 @@ export class ContactsPage implements OnInit {
     this.isSubmitting.set(true);
     this.errorMessage.set('');
 
-    const payload: CreateContact | UpdateContact = {
-      name,
-      surname,
-      mobileNumber: this.mobileNumber.trim() || null,
-      email: this.email.trim() || null,
-    };
+    const selectedId = this.selectedContact()?.id;
 
-    const selectedId = this.selectedContactId();
-    const request$ = selectedId
-      ? this.contactsService.update(selectedId, payload)
-      : this.contactsService.create(payload);
+    let request$ : Observable<Contact> | null = null; 
+
+    if (selectedId == null) {
+      // Create new contact
+      const payloadCreate : CreateContact = {
+        name: name.trim(),
+        surname: surname.trim(),
+        mobileNumber: this.mobileNumber.trim() || null,
+        email: this.email.trim() || null,
+      };
+      request$ = this.contactsService.create(payloadCreate);
+    } else {
+      // Update existing contact
+      const payloadUpdate : UpdateContact = {
+        name,
+        surname,
+        mobileNumber: this.mobileNumber.trim() || null,
+        email: this.email.trim() || null,
+        rowVersion: this.selectedContact()?.rowVersion || null,
+      };
+      request$ = this.contactsService.update(selectedId, payloadUpdate);
+    }
 
     request$
       .pipe(finalize(() => this.isSubmitting.set(false)))
@@ -125,7 +138,7 @@ export class ContactsPage implements OnInit {
   }
 
   deleteSelected(): void {
-    const selectedId = this.selectedContactId();
+    const selectedId = this.selectedContact()?.id;
 
     if (!selectedId || this.isDeleting() || this.isSubmitting()) {
       return;

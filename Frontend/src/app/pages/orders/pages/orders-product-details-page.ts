@@ -151,14 +151,21 @@ export class OrdersProductDetailsPage implements OnInit {
     }
 
     this.ordersService
-      .update(this.orderId, { customerId: this.customerId })
+      .update(this.orderId, {
+        customerId: this.customerId,
+        rowVersion: this.order()?.rowVersion ?? '',
+      })
       .pipe(finalize(() => this.isSaving.set(false)))
       .subscribe({
         next: (order) => {
           this.order.set(order);
           this.successMessage.set('Order updated successfully.');
         },
-        error: () => {
+        error: (error) => {
+          if (error.status === 409) {
+            this.errorMessage.set('This order was updated by another user. Reload it and try again.');
+            return;
+          }
           this.errorMessage.set('Unable to update order.');
         },
       });

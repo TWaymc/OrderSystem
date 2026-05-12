@@ -3,6 +3,7 @@ using Contacts.Application.DTOs;
 using Contacts.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Contacts.API.Controllers;
 
@@ -51,8 +52,19 @@ public class ContactsController : ControllerBase
         if (!TryGetCurrentUserFullName(out var fullName))
             return Unauthorized("Token must include name and surname claims.");
 
-        var contact = await _service.UpdateAsync(id, dto, fullName);
-        return Ok(contact);
+        try
+        {
+            var contact = await _service.UpdateAsync(id, dto, fullName);
+            return Ok(contact);
+        }
+        catch (FormatException)
+        {
+            return BadRequest("Invalid RowVersion format.");
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Conflict("Contact was modified by another request. Refresh and retry.");
+        }
     }
 
     [HttpDelete("{id}")]

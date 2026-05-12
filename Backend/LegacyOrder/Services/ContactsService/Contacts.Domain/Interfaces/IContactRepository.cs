@@ -7,6 +7,6 @@ public interface IContactRepository
     Task<Contact?> GetByIdAsync(Guid id);
     Task<IEnumerable<Contact>> GetAllAsync();
     Task<Contact> AddAsync(Contact contact);
-    Task<Contact> UpdateAsync(Contact contact);
+    Task<Contact> UpdateAsync(Contact contact, byte[] originalRowVersion);
     Task<bool> DeleteAsync(Guid id, string lastUpdatedBy);
 }

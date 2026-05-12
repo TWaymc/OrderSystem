@@ -83,7 +83,7 @@
             @for (contact of contacts(); track contact.id) {
               <tr
                 (click)="selectContact(contact)"
-                [class.selected]="selectedContactId() === contact.id"
+                [class.selected]="selectedContact()?.id === contact.id"
               >
                 <td>{{ contact.code }}</td>
                 <td>{{ contact.name }}</td>

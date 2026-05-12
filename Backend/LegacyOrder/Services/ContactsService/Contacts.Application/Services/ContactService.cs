@@ -83,13 +83,15 @@ public class ContactService : IContactService
         if (contact == null)
             throw new Exception("Contact not found");
 
+        var originalRowVersion = Convert.FromBase64String(dto.RowVersion);
+
         contact.Name = dto.Name;
         contact.Surname = dto.Surname;
         contact.MobileNumber = dto.MobileNumber;
         contact.Email = dto.Email;
         contact.LastModifiedBy = lastModifiedBy;
 
-        var updated = await _repo.UpdateAsync(contact);
+        var updated = await _repo.UpdateAsync(contact, originalRowVersion);
 
         await _contactPublisher.PublishAsync(id);
         await _cache.RemoveAsync($"contacts:contact:{id}");

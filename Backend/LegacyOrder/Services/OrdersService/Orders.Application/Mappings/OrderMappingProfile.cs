@@ -8,7 +8,8 @@ public class OrderMappingProfile : Profile
 {
     public OrderMappingProfile()
     {
-        CreateMap<Order, OrderDto>();
+        CreateMap<Order, OrderDto>()
+            .ForCtorParam("RowVersion", opt => opt.MapFrom(src => Convert.ToBase64String(src.RowVersion)));
         CreateMap<OrderItem, OrderItemDto>();
     }
 }

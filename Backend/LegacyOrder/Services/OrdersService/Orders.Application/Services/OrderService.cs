@@ -116,6 +116,8 @@ public class OrderService : IOrderService
         var order = await _repo.GetByIdAsync(id);
         if (order == null)
             throw new Exception("Order not found");
+        
+        var originalRowVersion = Convert.FromBase64String(dto.RowVersion);
 
         var contact = await GetContactAsync(dto.CustomerId)
                       ?? throw new Exception($"Contact '{dto.CustomerId}' not found.");
@@ -128,7 +130,7 @@ public class OrderService : IOrderService
         order.LastModifiedBy = lastModifiedBy;
 
         // RecalculateTotals(order); here is useless
-        var updated = await _repo.UpdateAsync(order);
+        var updated = await _repo.UpdateAsync(order, originalRowVersion);
         await _cache.RemoveAsync($"orders:order:{id}");
         await _logger.InfoAsync($"Order: {order.Code} updated by: {lastModifiedBy}");
 
@@ -240,12 +242,14 @@ public class OrderService : IOrderService
         var order = await _repo.GetByIdAsync(id);
         if (order == null)
             throw new Exception("Order not found");
+        
+        var originalRowVersion = Convert.FromBase64String(dto.RowVersion);
 
         order.StatusCode = dto.StatusCode;
         order.LastModifiedBy = lastModifiedBy;
 
         // RecalculateTotals(order); here is useless
-        var updated = await _repo.UpdateAsync(order);
+        var updated = await _repo.UpdateAsync(order, originalRowVersion);
 
         // await _orderPublisher.PublishAsync(id);  Implemented but not consumed by anything in the system so far,  So Commented
         await _cache.RemoveAsync($"orders:order:{id}");

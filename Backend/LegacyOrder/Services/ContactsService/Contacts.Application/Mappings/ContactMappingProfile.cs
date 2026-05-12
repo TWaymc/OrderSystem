@@ -8,6 +8,7 @@ public class ContactMappingProfile : Profile
 {
     public ContactMappingProfile()
     {
-        CreateMap<Contact, ContactDto>();
+        CreateMap<Contact, ContactDto>()
+            .ForCtorParam("RowVersion", opt => opt.MapFrom(src => Convert.ToBase64String(src.RowVersion)));
     }
 }

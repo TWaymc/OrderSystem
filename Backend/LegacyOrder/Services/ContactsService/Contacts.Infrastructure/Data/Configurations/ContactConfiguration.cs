@@ -36,7 +36,7 @@ public class ContactConfiguration : IEntityTypeConfiguration<Contact>
         builder.Property(c => c.Email)
             .HasMaxLength(256);
 
-        builder.Property<byte[]>("RowVersion")
+        builder.Property(c => c.RowVersion)
             .IsRowVersion();
 
         builder.Property(c => c.CreatedAt)

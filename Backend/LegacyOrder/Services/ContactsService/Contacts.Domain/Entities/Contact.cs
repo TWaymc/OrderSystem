@@ -9,6 +9,6 @@ public class Contact : BaseEntity
     public string Surname { get; set; } = string.Empty;
     public string? MobileNumber { get; set; }
     public string? Email { get; set; }
-    
-    
+
+    public byte[] RowVersion { get; set; } = Array.Empty<byte>();
 }

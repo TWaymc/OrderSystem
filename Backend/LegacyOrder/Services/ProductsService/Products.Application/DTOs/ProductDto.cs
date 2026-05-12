@@ -10,7 +10,8 @@ public record ProductDto(
     string CreatedBy,
     string LastModifiedBy,
     DateTime CreatedAt,
-    DateTime? ModifiedAt);
+    DateTime? ModifiedAt,
+    string RowVersion);
 
 public record CreateProductDto(
     string Name,
@@ -20,4 +21,5 @@ public record CreateProductDto(
 public record UpdateProductDto(
     string Name,
     decimal Price,
-    string Description);
+    string Description,
+    string RowVersion);

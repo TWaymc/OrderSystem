@@ -22,6 +22,7 @@ export class ProductsPage implements OnInit {
   name = '';
   price: number | null = null;
   description = '';
+  selectedProductRowVersion = '';
 
   constructor(private readonly productsService: ProductsService) {}
 
@@ -55,6 +56,7 @@ export class ProductsPage implements OnInit {
     this.name = product.name;
     this.price = product.price;
     this.description = product.description;
+    this.selectedProductRowVersion = product.rowVersion;
     this.errorMessage.set('');
   }
 
@@ -63,6 +65,7 @@ export class ProductsPage implements OnInit {
     this.name = '';
     this.price = null;
     this.description = '';
+    this.selectedProductRowVersion = '';
     this.errorMessage.set('');
   }
 
@@ -83,7 +86,7 @@ export class ProductsPage implements OnInit {
     this.isSubmitting.set(true);
     this.errorMessage.set('');
 
-    const payload: CreateProduct | UpdateProduct = {
+    const basePayload: CreateProduct = {
       name,
       price,
       description,
@@ -91,8 +94,11 @@ export class ProductsPage implements OnInit {
 
     const selectedId = this.selectedProductId();
     const request$ = selectedId
-      ? this.productsService.update(selectedId, payload)
-      : this.productsService.create(payload);
+      ? this.productsService.update(selectedId, {
+          ...basePayload,
+          rowVersion: this.selectedProductRowVersion,
+        } satisfies UpdateProduct)
+      : this.productsService.create(basePayload);
 
     request$
       .pipe(finalize(() => this.isSubmitting.set(false)))
@@ -111,7 +117,11 @@ export class ProductsPage implements OnInit {
 
           this.clearSelection();
         },
-        error: () => {
+        error: (error) => {
+          if (error.status === 409) {
+            this.errorMessage.set('This product was updated by another user. Please refresh and try again.');
+            return;
+          }
           this.errorMessage.set('Unable to save product.');
         },
       });

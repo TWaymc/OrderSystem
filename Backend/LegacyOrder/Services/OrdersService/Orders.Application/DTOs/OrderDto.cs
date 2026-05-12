@@ -28,7 +28,8 @@ public record OrderDto(
     string CreatedBy,
     string LastModifiedBy,
     DateTime CreatedAt,
-    DateTime? ModifiedAt);
+    DateTime? ModifiedAt,
+    string RowVersion);
 
 public record CreateOrderItemDto(
     Guid ProductId,
@@ -39,11 +40,13 @@ public record CreateOrderDto(
     IReadOnlyList<CreateOrderItemDto> OrderItems);
 
 public record UpdateOrderDto(
-    Guid CustomerId);
+    Guid CustomerId,
+    string RowVersion);
 
 public record AddOrderItemDto(
     Guid ProductId,
     int Quantity);
 
 public record UpdateOrderStatusDto(
-    OrderStatus StatusCode);
+    OrderStatus StatusCode,
+    string RowVersion);

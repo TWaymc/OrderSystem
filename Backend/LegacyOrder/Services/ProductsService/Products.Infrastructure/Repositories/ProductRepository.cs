@@ -34,10 +34,11 @@ public class ProductRepository : IProductRepository
         return product;
     }
 
-    public async Task<Product> UpdateAsync(Product product)
+    public async Task<Product> UpdateAsync(Product product, byte[] originalRowVersion)
     {
         product.ModifiedAt = DateTime.UtcNow;
 
+        _context.Entry(product).Property(p => p.RowVersion).OriginalValue = originalRowVersion;
         _context.Products.Update(product);
         await _context.SaveChangesAsync();
         return product;

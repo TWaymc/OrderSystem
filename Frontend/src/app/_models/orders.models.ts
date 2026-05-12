@@ -26,6 +26,7 @@ export interface Order {
   lastModifiedBy: string;
   createdAt: string;
   modifiedAt: string | null;
+  rowVersion: string;
 }
 
 export interface CreateOrderItem {
@@ -40,6 +41,7 @@ export interface CreateOrder {
 
 export interface UpdateOrder {
   customerId: string;
+  rowVersion: string;
 }
 
 export interface AddOrderItem {
@@ -49,4 +51,5 @@ export interface AddOrderItem {
 
 export interface UpdateOrderStatus {
   statusCode: OrderStatus;
+  rowVersion: string;
 }

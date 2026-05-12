@@ -10,7 +10,8 @@ public record ContactDto(
     string CreatedBy,
     string LastModifiedBy,
     DateTime CreatedAt,
-    DateTime? ModifiedAt);
+    DateTime? ModifiedAt,
+    string RowVersion);
 
 public record CreateContactDto(
     string Name,
@@ -22,4 +23,5 @@ public record UpdateContactDto(
     string Name,
     string Surname,
     string? MobileNumber,
-    string? Email);
+    string? Email,
+    string RowVersion);

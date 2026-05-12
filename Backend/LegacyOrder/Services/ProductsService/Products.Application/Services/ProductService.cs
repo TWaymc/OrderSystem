@@ -84,13 +84,15 @@ public class ProductService: IProductService
         var product = await _repo.GetByIdAsync(id);
         if (product == null)
             throw new Exception("Product not found");
+        
+        var originalRowVersion = Convert.FromBase64String(dto.RowVersion);
 
         product.Name = dto.Name;
         product.Price = dto.Price;
         product.Description = dto.Description;
         product.LastModifiedBy = lastModifiedBy;
 
-        var updated = await _repo.UpdateAsync(product);
+        var updated = await _repo.UpdateAsync(product, originalRowVersion);
         
         await _productPublisher.PublishAsync(id);
         

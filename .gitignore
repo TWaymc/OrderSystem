@@ -56,3 +56,9 @@ Backend/LegacyOrder/Services/OrdersService/Orders.Worker/bin
 Backend/LegacyOrder/Services/ContactsService/Contacts.Domain/bin
 Services/AuthService/Auth.Infrastructure/obj
 Backend/Services/AuthService/Auth.Infrastructure/obj
+Backend/LegacyOrder/Services/ContactsService/Contacts.Tests/bin
+Backend/LegacyOrder/Services/ContactsService/Contacts.Tests/obj
+Backend/LegacyOrder/Services/OrdersService/Orders.Tests/bin
+Backend/LegacyOrder/Services/OrdersService/Orders.Tests/obj
+Backend/LegacyOrder/Services/ProductsService/Products.Tests/bin
+Backend/LegacyOrder/Services/ProductsService/Products.Tests/obj

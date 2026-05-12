@@ -8,6 +8,7 @@ export interface Product {
   lastModifiedBy: string;
   createdAt: string;
   modifiedAt: string | null;
+  rowVersion: string;
 }
 
 export interface CreateProduct {
@@ -20,4 +21,5 @@ export interface UpdateProduct {
   name: string;
   price: number;
   description: string;
+  rowVersion: string;
 }

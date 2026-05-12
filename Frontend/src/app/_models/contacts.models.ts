@@ -9,6 +9,7 @@ export interface Contact {
   lastModifiedBy: string;
   createdAt: string;
   modifiedAt: string | null;
+  rowVersion: string | null;
 }
 
 export interface CreateContact {
@@ -23,4 +24,5 @@ export interface UpdateContact {
   surname: string;
   mobileNumber: string | null;
   email: string | null;
+  rowVersion: string | null;
 }

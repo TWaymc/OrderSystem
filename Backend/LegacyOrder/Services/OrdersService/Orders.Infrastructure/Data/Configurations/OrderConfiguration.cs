@@ -42,7 +42,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.CustomerEmail)
             .HasMaxLength(256);
 
-        builder.Property<byte[]>("RowVersion")
+        builder.Property(o => o.RowVersion)
             .IsRowVersion();
 
         builder.Property(o => o.CreatedAt)

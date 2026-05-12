@@ -33,10 +33,11 @@ public class ContactRepository : IContactRepository
         return contact;
     }
 
-    public async Task<Contact> UpdateAsync(Contact contact)
+    public async Task<Contact> UpdateAsync(Contact contact, byte[] originalRowVersion)
     {
         contact.ModifiedAt = DateTime.UtcNow;
 
+        _context.Entry(contact).Property(c => c.RowVersion).OriginalValue = originalRowVersion;
         _context.Contacts.Update(contact);
         await _context.SaveChangesAsync();
         return contact;

@@ -130,7 +130,10 @@ export class OrdersProductListPage implements OnInit {
     this.errorMessage.set('');
 
     this.ordersService
-      .updateStatus(order.id, { statusCode: newStatusCode })
+      .updateStatus(order.id, {
+        statusCode: newStatusCode,
+        rowVersion: order.rowVersion,
+      })
       .pipe(finalize(() => this.updatingStatusOrderId.set(null)))
       .subscribe({
         next: (updatedOrder) => {
@@ -141,7 +144,12 @@ export class OrdersProductListPage implements OnInit {
           );
           this.openStatusMenuOrderId.set(null);
         },
-        error: () => {
+        error: (error) => {
+          if (error.status === 409) {
+            this.errorMessage.set('Order status changed elsewhere. Refresh and try again.');
+            this.loadOrders();
+            return;
+          }
           this.errorMessage.set('Unable to change order status.');
         },
       });

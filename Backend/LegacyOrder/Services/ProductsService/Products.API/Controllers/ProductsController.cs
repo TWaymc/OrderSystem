@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Products.Application.DTOs;
 using Products.Application.Interfaces;
@@ -51,8 +52,19 @@ public class ProductsController : ControllerBase
         if (!TryGetCurrentUserFullName(out var fullName))
             return Unauthorized("Token must include name and surname claims.");
 
-        var product = await _service.UpdateAsync(id, dto, fullName);
-        return Ok(product);
+        try
+        {
+            var product = await _service.UpdateAsync(id, dto, fullName);
+            return Ok(product);
+        }
+        catch (FormatException)
+        {
+            return BadRequest("Invalid RowVersion format.");
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Conflict("Product was modified by another request. Refresh and retry.");
+        }
     }
 
     [HttpDelete("{id}")]

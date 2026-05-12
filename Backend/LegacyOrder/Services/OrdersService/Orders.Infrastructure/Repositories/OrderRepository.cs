@@ -37,9 +37,14 @@ public class OrderRepository : IOrderRepository
         return order;
     }
 
-    public async Task<Order> UpdateAsync(Order order)
+    public async Task<Order> UpdateAsync(Order order, byte[]? originalRowVersion = null)
     {
         order.ModifiedAt = DateTime.UtcNow;
+
+        if (originalRowVersion != null)
+        {
+            _context.Entry(order).Property(o => o.RowVersion).OriginalValue = originalRowVersion;
+        }
 
         //_context.Orders.Update(order);
         await _context.SaveChangesAsync();

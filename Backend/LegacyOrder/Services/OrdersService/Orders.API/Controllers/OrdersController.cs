@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Orders.Application.DTOs;
 using Orders.Application.Interfaces;
 
@@ -51,8 +52,19 @@ public class OrdersController : ControllerBase
         if (!TryGetCurrentUserFullName(out var fullName))
             return Unauthorized("Token must include name and surname claims.");
 
-        var order = await _service.UpdateStatusAsync(id, dto, fullName);
-        return Ok(order);
+        try
+        {
+            var order = await _service.UpdateStatusAsync(id, dto, fullName);
+            return Ok(order);
+        }
+        catch (FormatException)
+        {
+            return BadRequest("Invalid RowVersion format.");
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Conflict("Order was modified by another request. Refresh and retry.");
+        }
     }
 
     [HttpPut("{id}")]
@@ -61,8 +73,19 @@ public class OrdersController : ControllerBase
         if (!TryGetCurrentUserFullName(out var fullName))
             return Unauthorized("Token must include name and surname claims.");
 
-        var order = await _service.UpdateAsync(id, dto, fullName);
-        return Ok(order);
+        try
+        {
+            var order = await _service.UpdateAsync(id, dto, fullName);
+            return Ok(order);
+        }
+        catch (FormatException)
+        {
+            return BadRequest("Invalid RowVersion format.");
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Conflict("Order was modified by another request. Refresh and retry.");
+        }
     }
 
     [HttpPost("{id}/items")]
