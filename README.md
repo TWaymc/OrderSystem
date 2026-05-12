@@ -302,6 +302,44 @@ A scalable solution is to adopt a \*\*microservices architecture\*\*.
 
 
 
+\## 🐳 Run With Docker
+
+From the repository root:
+
+```bash
+docker compose up --build -d
+```
+
+Services and ports:
+
+\- Frontend: `http://localhost:4200`
+\- API Gateway: `http://localhost:5001`
+\- Auth API: `http://localhost:5002`
+\- Products API: `http://localhost:5003`
+\- Contacts API: `http://localhost:5004`
+\- Orders API: `http://localhost:5005`
+\- SQL Server: `localhost:1433` (user: `sa`, password: `YourStrong@Passw0rd`)
+\- RabbitMQ UI: `http://localhost:15672` (guest/guest)
+\- Redis: `localhost:6379`
+
+To stop:
+
+```bash
+docker compose down
+```
+
+To stop and remove persisted SQL data:
+
+```bash
+docker compose down -v
+```
+
+> Note: this setup only starts infrastructure and services. If SQL schema is missing, run your EF Core migrations once for each API.
+
+\---
+
+
+
 \## 🔮 Future Improvements
 
 

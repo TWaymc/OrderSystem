@@ -1,0 +1,190 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: legacyorder-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "YourStrong@Passw0rd"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+
+  redis:
+    image: redis:7-alpine
+    container_name: legacyorder-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: legacyorder-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  auth-api:
+    build:
+      context: ./Backend/LegacyOrder
+      dockerfile: Services/AuthService/Auth.API/Dockerfile
+    container_name: legacyorder-auth-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Server=sqlserver;Database=LegacyOrder.Auth;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+    depends_on:
+      - sqlserver
+    ports:
+      - "5002:8080"
+
+  products-api:
+    build:
+      context: ./Backend/LegacyOrder
+      dockerfile: Services/ProductsService/Products.API/Dockerfile
+    container_name: legacyorder-products-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Server=sqlserver;Database=LegacyOrder.Products;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+      ConnectionStrings__Redis: redis:6379,abortConnect=false
+      RabbitMq__HostName: rabbitmq
+      RabbitMq__Port: 5672
+      RabbitMq__UserName: guest
+      RabbitMq__Password: guest
+    depends_on:
+      sqlserver:
+        condition: service_started
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      - "5003:8080"
+
+  contacts-api:
+    build:
+      context: ./Backend/LegacyOrder
+      dockerfile: Services/ContactsService/Contacts.API/Dockerfile
+    container_name: legacyorder-contacts-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Server=sqlserver;Database=LegacyOrder.Contacts;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+      ConnectionStrings__Redis: redis:6379,abortConnect=false
+      RabbitMq__HostName: rabbitmq
+      RabbitMq__Port: 5672
+      RabbitMq__UserName: guest
+      RabbitMq__Password: guest
+    depends_on:
+      sqlserver:
+        condition: service_started
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      - "5004:8080"
+
+  orders-api:
+    build:
+      context: ./Backend/LegacyOrder
+      dockerfile: Services/OrdersService/Orders.API/Dockerfile
+    container_name: legacyorder-orders-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Server=sqlserver;Database=LegacyOrder.Orders;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+      ConnectionStrings__Redis: redis:6379,abortConnect=false
+      RabbitMq__HostName: rabbitmq
+      RabbitMq__Port: 5672
+      RabbitMq__UserName: guest
+      RabbitMq__Password: guest
+      ExternalApis__ProductsBaseUrl: http://products-api:8080
+      ExternalApis__ContactsBaseUrl: http://contacts-api:8080
+    depends_on:
+      sqlserver:
+        condition: service_started
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      products-api:
+        condition: service_started
+      contacts-api:
+        condition: service_started
+    ports:
+      - "5005:8080"
+
+  api-gateway:
+    build:
+      context: ./Backend/LegacyOrder
+      dockerfile: API-Gateway/Dockerfile
+    container_name: legacyorder-api-gateway
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+    depends_on:
+      - auth-api
+      - products-api
+      - contacts-api
+      - orders-api
+    volumes:
+      - ./Backend/LegacyOrder/API-Gateway/ocelot.Docker.json:/app/ocelot.json:ro
+    ports:
+      - "5001:8080"
+
+  orders-worker:
+    build:
+      context: ./Backend/LegacyOrder
+      dockerfile: Services/OrdersService/Orders.Worker/Dockerfile
+    container_name: legacyorder-orders-worker
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      ConnectionStrings__Redis: redis:6379,abortConnect=false
+      RabbitMq__HostName: rabbitmq
+      RabbitMq__Port: 5672
+      RabbitMq__UserName: guest
+      RabbitMq__Password: guest
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  log-worker:
+    build:
+      context: ./Backend/LegacyOrder
+      dockerfile: Services/LogService/Log.Worker/Dockerfile
+    container_name: legacyorder-log-worker
+    environment:
+      DOTNET_ENVIRONMENT: Development
+      RabbitMq__HostName: rabbitmq
+      RabbitMq__Port: 5672
+      RabbitMq__UserName: guest
+      RabbitMq__Password: guest
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: legacyorder-frontend
+    depends_on:
+      - api-gateway
+    ports:
+      - "4200:4200"
+
+volumes:
+  sqlserver-data:
